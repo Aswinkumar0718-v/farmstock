@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmStock - Produce Inventory Tracker</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-leaf logo-icon"></i>
+            <div>
+                <h2>FarmStock</h2>
+                <p>Inventory Tracker</p>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-link active" data-target="view-dashboard"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="#" class="nav-link" data-target="view-crops"><i class="fa-solid fa-seedling"></i> Crops</a>
+            <a href="#" class="nav-link" data-target="view-harvests"><i class="fa-solid fa-wheat-awn"></i> Harvests</a>
+            <a href="#" class="nav-link" data-target="view-sales"><i class="fa-solid fa-cart-shopping"></i> Sales</a>
+            <a href="#" class="nav-link" data-target="view-stock"><i class="fa-solid fa-boxes-stacked"></i> Stock</a>
+            <a href="#" class="nav-link" data-target="view-revenue"><i class="fa-solid fa-chart-line"></i> Revenue Reports</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="status-indicator">
+                <span class="status-dot"></span> Connected
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- TOP HEADER -->
+        <header class="top-header">
+            <div class="header-left">
+                <button id="mobile-menu-btn" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+                <h1 id="page-title">Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <span id="current-date" class="current-date"></span>
+                <button class="btn-icon" id="btn-refresh" title="Refresh Data"><i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+        </header>
+
+        <!-- TOAST CONTAINER -->
+        <div id="toast-container" class="toast-container"></div>
+
+        <!-- VIEWS -->
+        <div class="views-container">
+            
+            <!-- 1. DASHBOARD VIEW -->
+            <section id="view-dashboard" class="view active">
+                <div class="dashboard-welcome">
+                    <h2>Good morning</h2>
+                    <p>Farm Inventory Overview</p>
+                </div>
+                
+                <div class="summary-cards">
+                    <div class="card summary-card">
+                        <div class="card-icon"><i class="fa-solid fa-seedling"></i></div>
+                        <div class="card-info">
+                            <p class="card-label">Total Crops</p>
+                            <h3 id="dash-total-crops" class="card-value">-</h3>
+                        </div>
+                    </div>
+                    <div class="card summary-card">
+                        <div class="card-icon"><i class="fa-solid fa-wheat-awn"></i></div>
+                        <div class="card-info">
+                            <p class="card-label">Total Harvested</p>
+                            <h3 id="dash-total-harvested" class="card-value">-</h3>
+                        </div>
+                    </div>
+                    <div class="card summary-card">
+                        <div class="card-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                        <div class="card-info">
+                            <p class="card-label">Total Sold</p>
+                            <h3 id="dash-total-sold" class="card-value">-</h3>
+                        </div>
+                    </div>
+                    <div class="card summary-card">
+                        <div class="card-icon"><i class="fa-solid fa-box-open"></i></div>
+                        <div class="card-info">
+                            <p class="card-label">Available Stock</p>
+                            <h3 id="dash-available-stock" class="card-value">-</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <button class="btn btn-outline" onclick="openModal('modal-crop')"><i class="fa-solid fa-plus"></i> Add Crop</button>
+                    <button class="btn btn-outline" onclick="openModal('modal-harvest')"><i class="fa-solid fa-plus"></i> Record Harvest</button>
+                    <button class="btn btn-outline" onclick="openModal('modal-sale')"><i class="fa-solid fa-plus"></i> Record Sale</button>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Current Stock Overview</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="dash-stock-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Crop</th>
+                                        <th>Harvested</th>
+                                        <th>Sold</th>
+                                        <th>Available</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                            <div id="dash-stock-empty" class="empty-state hidden">No inventory available.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Activity</h3>
+                        </div>
+                        <div class="activity-feed" id="dash-activity-feed">
+                            <!-- Populated by JS -->
+                            <div class="empty-state">No recent activity yet.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. CROPS VIEW -->
+            <section id="view-crops" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2>Crop Management</h2>
+                        <p>Manage the crops available in your farm inventory.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('modal-crop')"><i class="fa-solid fa-plus"></i> Add Crop</button>
+                </div>
+                <div class="card">
+                    <div class="table-toolbar">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="search-crop" placeholder="Search crops...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="crops-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Crop Name</th>
+                                    <th>Category</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div id="crops-empty" class="empty-state hidden">
+                            <p>No crops added yet.</p>
+                            <button class="btn btn-primary" onclick="openModal('modal-crop')">Add Your First Crop</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. HARVESTS VIEW -->
+            <section id="view-harvests" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2>Harvest Management</h2>
+                        <p>Record produce harvested from the farm.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('modal-harvest')"><i class="fa-solid fa-plus"></i> Record Harvest</button>
+                </div>
+                <div class="card">
+                    <div class="table-responsive">
+                        <table id="harvests-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Crop</th>
+                                    <th>Quantity</th>
+                                    <th>Harvest Date</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div id="harvests-empty" class="empty-state hidden">
+                            <p>No harvest records yet.</p>
+                            <button class="btn btn-primary" onclick="openModal('modal-harvest')">Record Harvest</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. SALES VIEW -->
+            <section id="view-sales" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2>Sales Management</h2>
+                        <p>Record produce sales and monitor sales history.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('modal-sale')"><i class="fa-solid fa-plus"></i> Record Sale</button>
+                </div>
+                <div class="card">
+                    <div class="table-responsive">
+                        <table id="sales-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Crop</th>
+                                    <th>Quantity</th>
+                                    <th>Price / Unit</th>
+                                    <th>Total Amount</th>
+                                    <th>Sale Date</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div id="sales-empty" class="empty-state hidden">
+                            <p>No sales recorded yet.</p>
+                            <button class="btn btn-primary" onclick="openModal('modal-sale')">Record Sale</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. STOCK VIEW -->
+            <section id="view-stock" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2>Current Stock</h2>
+                        <p>Total Available Stock</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="table-toolbar">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="search-stock" placeholder="Search stock...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="stock-page-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Crop</th>
+                                    <th>Category</th>
+                                    <th>Total Harvested</th>
+                                    <th>Total Sold</th>
+                                    <th>Available Stock</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div id="stock-empty" class="empty-state hidden">No inventory available.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. REVENUE VIEW -->
+            <section id="view-revenue" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2>Revenue Reports</h2>
+                        <p>View revenue generated by crops over a selected date range.</p>
+                    </div>
+                </div>
+                <div class="card filter-card">
+                    <form id="form-revenue" class="revenue-filter-form">
+                        <div class="form-group">
+                            <label>Crop <span class="required">*</span></label>
+                            <select id="rev-crop" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>From Date <span class="required">*</span></label>
+                            <input type="date" id="rev-from" required>
+                        </div>
+                        <div class="form-group">
+                            <label>To Date <span class="required">*</span></label>
+                            <input type="date" id="rev-to" required>
+                        </div>
+                        <div class="form-group btn-align">
+                            <button type="submit" class="btn btn-primary full-width" id="btn-generate-rev">Generate Report</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div id="revenue-result-container" class="hidden">
+                    <div class="revenue-summary-card">
+                        <p>Total Revenue</p>
+                        <h2 id="rev-total-amount">₹0.00</h2>
+                    </div>
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Crop</th>
+                                        <th>Date Range</th>
+                                        <th>Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td id="rev-table-crop">-</td>
+                                        <td id="rev-table-dates">-</td>
+                                        <td id="rev-table-revenue">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- MODALS -->
+    
+    <!-- Modal: Add/Edit Crop -->
+    <div class="modal-overlay" id="modal-crop">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="crop-modal-title">Add New Crop</h3>
+                <button class="btn-close" onclick="closeModal('modal-crop')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-crop">
+                    <input type="hidden" id="crop-id">
+                    <div class="form-group">
+                        <label for="crop-name">Crop Name <span class="required">*</span></label>
+                        <input type="text" id="crop-name" placeholder="e.g., Tomato" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="crop-category">Category <span class="required">*</span></label>
+                        <input type="text" id="crop-category" placeholder="e.g., Vegetable" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-crop')">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="btn-save-crop">Save Crop</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Record Harvest -->
+    <div class="modal-overlay" id="modal-harvest">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Record Harvest</h3>
+                <button class="btn-close" onclick="closeModal('modal-harvest')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-harvest">
+                    <div class="form-group">
+                        <label for="harv-crop">Crop <span class="required">*</span></label>
+                        <select id="harv-crop" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="harv-qty">Quantity (kg) <span class="required">*</span></label>
+                        <input type="number" id="harv-qty" step="0.01" min="0.01" placeholder="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="harv-date">Harvest Date <span class="required">*</span></label>
+                        <input type="date" id="harv-date" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-harvest')">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="btn-save-harvest">Record Harvest</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Record Sale -->
+    <div class="modal-overlay" id="modal-sale">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Record New Sale</h3>
+                <button class="btn-close" onclick="closeModal('modal-sale')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-sale">
+                    <div class="form-group">
+                        <label for="sale-crop">Crop <span class="required">*</span></label>
+                        <select id="sale-crop" required></select>
+                        <small class="hint-text" id="sale-stock-hint">Available Stock: --</small>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="sale-qty">Quantity (kg) <span class="required">*</span></label>
+                            <input type="number" id="sale-qty" step="0.01" min="0.01" placeholder="25" required>
+                        </div>
+                        <div class="col">
+                            <label for="sale-price">Price Per Unit (₹) <span class="required">*</span></label>
+                            <input type="number" id="sale-price" step="0.01" min="0.01" placeholder="50" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sale-date">Sale Date <span class="required">*</span></label>
+                        <input type="date" id="sale-date" required>
+                    </div>
+                    
+                    <div class="estimate-box">
+                        <span>Estimated Total:</span>
+                        <strong id="sale-estimate">₹0.00</strong>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-sale')">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="btn-save-sale">Record Sale</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirm Delete -->
+    <div class="modal-overlay" id="modal-delete">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h3 id="delete-modal-title">Delete Record?</h3>
+                <button class="btn-close" onclick="closeModal('modal-delete')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p id="delete-confirm-text">Are you sure you want to delete this record?</p>
+                <input type="hidden" id="delete-record-id">
+                <input type="hidden" id="delete-record-type">
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete')">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="btn-confirm-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js?v=2"></script>
+</body>
+</html>

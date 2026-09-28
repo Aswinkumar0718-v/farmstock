@@ -1,0 +1,136 @@
+{
+  "info": {
+    "name": "FarmStock",
+    "description": "API collection for FarmStock project",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Crops",
+      "item": [
+        {
+          "name": "Create Crop",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Tomato\",\n  \"category\": \"Vegetable\"\n}" },
+            "url": { "raw": "http://localhost:8080/api/crops", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "crops"] }
+          }
+        },
+        {
+          "name": "Get All Crops",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/crops", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "crops"] } }
+        },
+        {
+          "name": "Get Crop By ID",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/crops/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "crops", "1"] } }
+        },
+        {
+          "name": "Update Crop",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Tomato Updated\",\n  \"category\": \"Vegetable\"\n}" },
+            "url": { "raw": "http://localhost:8080/api/crops/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "crops", "1"] }
+          }
+        },
+        {
+          "name": "Delete Crop",
+          "request": { "method": "DELETE", "url": { "raw": "http://localhost:8080/api/crops/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "crops", "1"] } }
+        }
+      ]
+    },
+    {
+      "name": "Harvests",
+      "item": [
+        {
+          "name": "Create Harvest",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cropId\": 1,\n  \"quantity\": 100,\n  \"harvestDate\": \"2026-09-20\"\n}" },
+            "url": { "raw": "http://localhost:8080/api/harvests", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "harvests"] }
+          }
+        },
+        {
+          "name": "Get All Harvests",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/harvests", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "harvests"] } }
+        },
+        {
+          "name": "Get Harvest By ID",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/harvests/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "harvests", "1"] } }
+        },
+        {
+          "name": "Get Harvests By Crop",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/harvests/crop/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "harvests", "crop", "1"] } }
+        }
+      ]
+    },
+    {
+      "name": "Sales",
+      "item": [
+        {
+          "name": "Create Sale",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cropId\": 1,\n  \"quantity\": 30,\n  \"pricePerUnit\": 50,\n  \"saleDate\": \"2026-09-21\"\n}" },
+            "url": { "raw": "http://localhost:8080/api/sales", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "sales"] }
+          }
+        },
+        {
+          "name": "Get All Sales",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/sales", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "sales"] } }
+        },
+        {
+          "name": "Get Sale By ID",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/sales/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "sales", "1"] } }
+        },
+        {
+          "name": "Get Sales By Crop",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/sales/crop/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "sales", "crop", "1"] } }
+        },
+        {
+          "name": "Overselling Test",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cropId\": 1,\n  \"quantity\": 999999,\n  \"pricePerUnit\": 50,\n  \"saleDate\": \"2026-09-21\"\n}" },
+            "url": { "raw": "http://localhost:8080/api/sales", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "sales"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stock",
+      "item": [
+        {
+          "name": "Get All Stock",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/stock", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "stock"] } }
+        },
+        {
+          "name": "Get Stock By Crop",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/stock/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "stock", "1"] } }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Revenue Report",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/reports/revenue?cropId=1&from=2026-09-01&to=2026-09-30", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "reports", "revenue"], "query": [ { "key": "cropId", "value": "1" }, { "key": "from", "value": "2026-09-01" }, { "key": "to", "value": "2026-09-30" } ] } }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Dashboard Summary",
+          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/dashboard", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "dashboard"] } }
+        }
+      ]
+    }
+  ]
+}
